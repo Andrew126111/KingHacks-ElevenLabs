@@ -3,15 +3,52 @@ import { useAnalyzeContract } from "@/hooks/use-analyze";
 import { ResultCard } from "@/components/ResultCard";
 import { useToast } from "@/hooks/use-toast";
 import { HighlightText } from "@/components/HighlightText";
-import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText, Eye, Edit2 } from "lucide-react";
+import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText, Eye, Edit2, Upload } from "lucide-react";
+import { api } from "@shared/routes";
 
 export default function Home() {
   const [contractText, setContractText] = useState("");
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
   const [isViewMode, setIsViewMode] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const { toast } = useToast();
   
   const { mutate, isPending, data, reset } = useAnalyzeContract();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch(api.import.parse.path, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Failed to import');
+      
+      const result = await response.json();
+      setContractText(result.text);
+      toast({
+        title: "Success",
+        description: result.message,
+      });
+    } catch (error) {
+      toast({
+        title: "Import failed",
+        description: "Could not extract text from file.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsImporting(false);
+      // Reset input
+      e.target.value = '';
+    }
+  };
 
   const handleAnalyze = (scenario: string) => {
     if (!contractText.trim()) {

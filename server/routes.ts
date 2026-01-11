@@ -4,6 +4,11 @@ import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { insertAnalysisSchema } from "@shared/schema";
 import OpenAI from "openai";
+import multer from "multer";
+import pdf from "pdf-parse";
+
+// Configure multer for file uploads
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Initialize OpenAI client using Replit AI integration env vars
 const openai = new OpenAI({
@@ -15,6 +20,29 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+
+  app.post(api.import.parse.path, upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      let text = "";
+      if (req.file.mimetype === 'application/pdf') {
+        const data = await pdf(req.file.buffer);
+        text = data.text;
+      } else if (req.file.mimetype === 'text/plain') {
+        text = req.file.buffer.toString('utf-8');
+      } else {
+        return res.status(400).json({ message: "Unsupported file type. Please upload .txt or .pdf" });
+      }
+
+      res.json({ text, message: "Contract loaded" });
+    } catch (error) {
+      console.error("Import error:", error);
+      res.status(500).json({ message: "Failed to parse contract file" });
+    }
+  });
 
   app.post(api.analyze.process.path, async (req, res) => {
     try {
