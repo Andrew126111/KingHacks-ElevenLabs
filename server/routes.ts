@@ -5,7 +5,7 @@ import { api } from "@shared/routes";
 import { insertAnalysisSchema } from "@shared/schema";
 import OpenAI from "openai";
 import multer from "multer";
-import pdf from "pdf-parse";
+import pdf from "pdf-parse/lib/pdf-parse.js";
 
 // Configure multer for file uploads
 const upload = multer({ storage: multer.memoryStorage() });

@@ -99,37 +99,53 @@ export default function Home() {
         
         {/* Results View & persistent input area */}
         <div className="space-y-12">
-          <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
-            <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
-               <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
-                 {isViewMode ? <Eye size={16} /> : <FileText size={16} />}
-                 <span>{isViewMode ? "Contract Review" : "Contract Input"}</span>
-               </div>
-               {isViewMode && (
-                <button 
-                  onClick={() => setIsViewMode(false)}
-                  className="text-xs text-primary hover:underline font-bold flex items-center gap-1"
-                >
-                  <Edit2 size={12} />
-                  Edit Original
-                </button>
-               )}
-            </div>
-            
-            {isViewMode && data ? (
-              <div className="p-6 h-64 overflow-y-auto text-base md:text-lg leading-relaxed font-serif whitespace-pre-wrap">
-                <HighlightText text={contractText} snippets={data.highlightSnippets || []} />
+            <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
+              <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
+                 <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                   {isViewMode ? <Eye size={16} /> : <FileText size={16} />}
+                   <span>{isViewMode ? "Contract Review" : "Contract Input"}</span>
+                 </div>
+                 <div className="flex items-center gap-4">
+                   {!isViewMode && (
+                     <label className="flex items-center gap-2 text-xs font-bold text-primary cursor-pointer hover:opacity-80 transition-opacity">
+                       {isImporting ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                       <span>Import (.txt, .pdf)</span>
+                       <input 
+                          type="file" 
+                          accept=".txt,.pdf" 
+                          className="hidden" 
+                          onChange={handleFileUpload}
+                          disabled={isImporting || isAnalyzing}
+                        />
+                     </label>
+                   )}
+                   {isViewMode && (
+                    <button 
+                      onClick={() => setIsViewMode(false)}
+                      className="text-xs text-primary hover:underline font-bold flex items-center gap-1"
+                    >
+                      <Edit2 size={12} />
+                      Edit Original
+                    </button>
+                   )}
+                   <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Step 1</span>
+                 </div>
               </div>
-            ) : (
-              <textarea
-                value={contractText}
-                onChange={(e) => setContractText(e.target.value)}
-                placeholder="Paste the full text of your contract here (e.g., Employment Agreement, Lease, Service Contract)..."
-                className="w-full h-64 p-6 resize-none focus:outline-none focus:bg-slate-50/30 transition-colors text-base md:text-lg leading-relaxed placeholder:text-slate-300 font-serif"
-                disabled={isAnalyzing}
-              />
-            )}
-          </div>
+              
+              {isViewMode && data ? (
+                <div className="p-6 h-64 overflow-y-auto text-base md:text-lg leading-relaxed font-serif whitespace-pre-wrap">
+                  <HighlightText text={contractText} snippets={data.highlightSnippets || []} />
+                </div>
+              ) : (
+                <textarea
+                  value={contractText}
+                  onChange={(e) => setContractText(e.target.value)}
+                  placeholder="Paste the full text of your contract here (e.g., Employment Agreement, Lease, Service Contract)..."
+                  className="w-full h-64 p-6 resize-none focus:outline-none focus:bg-slate-50/30 transition-colors text-base md:text-lg leading-relaxed placeholder:text-slate-300 font-serif"
+                  disabled={isAnalyzing}
+                />
+              )}
+            </div>
 
           <div className="space-y-6">
             <div className="flex items-center gap-4">
