@@ -3,6 +3,7 @@ import { useAnalyzeContract } from "@/hooks/use-analyze";
 import { ResultCard } from "@/components/ResultCard";
 import { useToast } from "@/hooks/use-toast";
 import { HighlightText } from "@/components/HighlightText";
+import { Hero } from "@/components/Hero";
 import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText, Eye, Edit2, Upload } from "lucide-react";
 import { api } from "@shared/routes";
 
@@ -94,6 +95,8 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      <Hero />
 
       <main className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         
