@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useAnalyzeContract } from "@/hooks/use-analyze";
 import { ResultCard } from "@/components/ResultCard";
 import { useToast } from "@/hooks/use-toast";
-import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText } from "lucide-react";
+import { HighlightText } from "@/components/HighlightText";
+import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText, Eye, Edit2 } from "lucide-react";
 
 export default function Home() {
   const [contractText, setContractText] = useState("");
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
+  const [isViewMode, setIsViewMode] = useState(false);
   const { toast } = useToast();
   
   const { mutate, isPending, data, reset } = useAnalyzeContract();
@@ -22,6 +24,7 @@ export default function Home() {
     }
     
     setActiveScenario(scenario);
+    setIsViewMode(true);
     mutate({ contractText, scenario });
   };
 
@@ -29,6 +32,7 @@ export default function Home() {
     reset();
     setActiveScenario(null);
     setContractText("");
+    setIsViewMode(false);
   };
 
   const isAnalyzing = isPending;
@@ -58,11 +62,32 @@ export default function Home() {
         
         {/* Results View */}
         {data && activeScenario ? (
-          <ResultCard 
-            data={data} 
-            scenario={activeScenario} 
-            onReset={handleReset} 
-          />
+          <div className="space-y-12">
+            <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
+              <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
+                 <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                   <Eye size={16} />
+                   <span>Contract Review (Highlighting Relevant Clauses)</span>
+                 </div>
+                 <button 
+                  onClick={() => setIsViewMode(false)}
+                  className="text-xs text-primary hover:underline font-bold flex items-center gap-1"
+                 >
+                   <Edit2 size={12} />
+                   Edit Original
+                 </button>
+              </div>
+              <div className="p-6 h-64 overflow-y-auto text-base md:text-lg leading-relaxed font-serif whitespace-pre-wrap">
+                <HighlightText text={contractText} snippets={data.highlightSnippets || []} />
+              </div>
+            </div>
+
+            <ResultCard 
+              data={data} 
+              scenario={activeScenario} 
+              onReset={handleReset} 
+            />
+          </div>
         ) : (
           /* Input View */
           <div className={`space-y-12 transition-opacity duration-500 ${isAnalyzing ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
