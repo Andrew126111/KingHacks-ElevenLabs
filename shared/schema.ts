@@ -9,7 +9,9 @@ export const analyses = pgTable("analyses", {
   scenario: varchar("scenario", { length: 50 }).notNull(), // 'quit', 'payment', 'terminate'
   originalClause: text("original_clause"),
   plainEnglish: text("plain_english"),
-  highlightSnippets: text("highlight_snippets").array(), // Specific strings to highlight
+  highlightSnippets: text("highlight_snippets").array(),
+  clarityLevel: varchar("clarity_level", { length: 20 }), // 'High', 'Medium', 'Low'
+  clarityReason: text("clarity_reason"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

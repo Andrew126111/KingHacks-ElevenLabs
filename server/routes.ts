@@ -41,7 +41,9 @@ export async function registerRoutes(
         {
           "originalClause": "substring from the contract...",
           "plainEnglish": "Your explanation here...",
-          "highlightSnippets": ["exact sentence 1 from contract", "exact sentence 2 from contract"]
+          "highlightSnippets": ["exact sentence 1 from contract", "exact sentence 2 from contract"],
+          "clarityLevel": "High" | "Medium" | "Low",
+          "clarityReason": "Short reason for the level (e.g. 'explicit clause found')"
         }`;
 
       const userPrompt = `Scenario: ${input.scenario}\n\nContract Text:\n${input.contractText}`;
@@ -64,7 +66,9 @@ export async function registerRoutes(
         aiResult = { 
           originalClause: "Could not parse AI response.", 
           plainEnglish: "An error occurred while analyzing the contract.",
-          highlightSnippets: []
+          highlightSnippets: [],
+          clarityLevel: "Low",
+          clarityReason: "Error parsing AI response"
         };
       }
 
@@ -73,13 +77,17 @@ export async function registerRoutes(
         ...input,
         originalClause: aiResult.originalClause || "Not found",
         plainEnglish: aiResult.plainEnglish || "Could not generate explanation",
-        highlightSnippets: aiResult.highlightSnippets || []
+        highlightSnippets: aiResult.highlightSnippets || [],
+        clarityLevel: aiResult.clarityLevel || "Low",
+        clarityReason: aiResult.clarityReason || "Unspecified"
       });
 
       res.json({
         originalClause: saved.originalClause || "",
         plainEnglish: saved.plainEnglish || "",
         highlightSnippets: saved.highlightSnippets || [],
+        clarityLevel: (saved.clarityLevel as 'High' | 'Medium' | 'Low') || "Low",
+        clarityReason: saved.clarityReason || "",
         audioUrl: undefined
       });
 

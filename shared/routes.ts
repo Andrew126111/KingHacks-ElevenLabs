@@ -12,6 +12,8 @@ export const api = {
           originalClause: z.string(),
           plainEnglish: z.string(),
           highlightSnippets: z.array(z.string()).optional(),
+          clarityLevel: z.enum(['High', 'Medium', 'Low']).optional(),
+          clarityReason: z.string().optional(),
           audioUrl: z.string().optional(),
         }),
         500: z.object({

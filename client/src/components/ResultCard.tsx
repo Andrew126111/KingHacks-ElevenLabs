@@ -60,6 +60,12 @@ export function ResultCard({ data, scenario, onReset }: ResultCardProps) {
               {data.plainEnglish}
             </p>
             
+            {data.clarityLevel && (
+              <div className="text-xs font-medium text-white/60 pt-2 border-t border-white/5 italic">
+                Clarity: {data.clarityLevel} — {data.clarityReason || (data.clarityLevel === 'High' ? 'explicit clause and clear numbers found' : data.clarityLevel === 'Medium' ? 'clause inferred but not explicit' : 'contract does not clearly specify consequences')}
+              </div>
+            )}
+            
             <div className="pt-4 border-t border-white/10">
               <AudioPlayer textToSpeak={data.plainEnglish} autoPlay={true} />
             </div>
