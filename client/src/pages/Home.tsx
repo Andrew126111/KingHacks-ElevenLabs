@@ -60,56 +60,30 @@ export default function Home() {
 
       <main className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         
-        {/* Results View */}
-        {data && activeScenario ? (
-          <div className="space-y-12">
-            <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
-              <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
-                 <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
-                   <Eye size={16} />
-                   <span>Contract Review (Highlighting Relevant Clauses)</span>
-                 </div>
-                 <button 
+        {/* Results View & persistent input area */}
+        <div className="space-y-12">
+          <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
+            <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
+               <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                 {isViewMode ? <Eye size={16} /> : <FileText size={16} />}
+                 <span>{isViewMode ? "Contract Review" : "Contract Input"}</span>
+               </div>
+               {isViewMode && (
+                <button 
                   onClick={() => setIsViewMode(false)}
                   className="text-xs text-primary hover:underline font-bold flex items-center gap-1"
-                 >
-                   <Edit2 size={12} />
-                   Edit Original
-                 </button>
-              </div>
+                >
+                  <Edit2 size={12} />
+                  Edit Original
+                </button>
+               )}
+            </div>
+            
+            {isViewMode && data ? (
               <div className="p-6 h-64 overflow-y-auto text-base md:text-lg leading-relaxed font-serif whitespace-pre-wrap">
                 <HighlightText text={contractText} snippets={data.highlightSnippets || []} />
               </div>
-            </div>
-
-            <ResultCard 
-              data={data} 
-              scenario={activeScenario} 
-              onReset={handleReset} 
-            />
-          </div>
-        ) : (
-          /* Input View */
-          <div className={`space-y-12 transition-opacity duration-500 ${isAnalyzing ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-            
-            <div className="text-center space-y-4 max-w-2xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary leading-tight">
-                Hear the consequences <br />
-                <span className="text-slate-500 italic font-serif font-normal">of breaking a contract.</span>
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                Paste your legal agreement below and select a scenario to hear a plain-English explanation of your risks.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-xl shadow-slate-200/60 border border-slate-200 overflow-hidden">
-              <div className="border-b border-slate-100 bg-slate-50/50 px-4 py-3 flex items-center justify-between">
-                 <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
-                   <FileText size={16} />
-                   <span>Contract Input</span>
-                 </div>
-                 <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Step 1</span>
-              </div>
+            ) : (
               <textarea
                 value={contractText}
                 onChange={(e) => setContractText(e.target.value)}
@@ -117,52 +91,63 @@ export default function Home() {
                 className="w-full h-64 p-6 resize-none focus:outline-none focus:bg-slate-50/30 transition-colors text-base md:text-lg leading-relaxed placeholder:text-slate-300 font-serif"
                 disabled={isAnalyzing}
               />
+            )}
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+               <span className="h-px bg-slate-200 flex-1"></span>
+               <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+                 {data ? "Explore Another Scenario" : "Step 2: Choose a Scenario"}
+               </span>
+               <span className="h-px bg-slate-200 flex-1"></span>
             </div>
 
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                 <span className="h-px bg-slate-200 flex-1"></span>
-                 <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Step 2: Choose a Scenario</span>
-                 <span className="h-px bg-slate-200 flex-1"></span>
-              </div>
+            <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+              <button
+                onClick={() => handleAnalyze('quit')}
+                disabled={isAnalyzing}
+                className={`btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden ${activeScenario === 'quit' ? 'border-primary ring-1 ring-primary' : ''}`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <LogOut size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
+                <span className="relative">If I quit early</span>
+                <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Resignation clauses</span>
+              </button>
 
-              <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-                <button
-                  onClick={() => handleAnalyze('quit')}
-                  disabled={isAnalyzing}
-                  className="btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <LogOut size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
-                  <span className="relative">If I quit early</span>
-                  <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Resignation clauses</span>
-                </button>
+              <button
+                onClick={() => handleAnalyze('payment')}
+                disabled={isAnalyzing}
+                className={`btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden ${activeScenario === 'payment' ? 'border-primary ring-1 ring-primary' : ''}`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <CreditCard size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
+                <span className="relative">If I miss payment</span>
+                <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Default & Penalties</span>
+              </button>
 
-                <button
-                  onClick={() => handleAnalyze('payment')}
-                  disabled={isAnalyzing}
-                  className="btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <CreditCard size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
-                  <span className="relative">If I miss payment</span>
-                  <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Default & Penalties</span>
-                </button>
-
-                <button
-                  onClick={() => handleAnalyze('terminate')}
-                  disabled={isAnalyzing}
-                  className="btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <UserX size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
-                  <span className="relative">If they fire me</span>
-                  <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Termination Rights</span>
-                </button>
-              </div>
+              <button
+                onClick={() => handleAnalyze('terminate')}
+                disabled={isAnalyzing}
+                className={`btn-scenario bg-white text-slate-700 hover:text-primary group relative overflow-hidden ${activeScenario === 'terminate' ? 'border-primary ring-1 ring-primary' : ''}`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <UserX size={32} strokeWidth={1.5} className="mb-2 text-slate-400 group-hover:text-primary transition-colors" />
+                <span className="relative">If they fire me</span>
+                <span className="text-xs font-sans text-muted-foreground relative group-hover:text-primary/70">Termination Rights</span>
+              </button>
             </div>
           </div>
-        )}
+
+          {data && activeScenario && (
+            <ResultCard 
+              key={`${activeScenario}-${data.originalClause}`}
+              data={data} 
+              scenario={activeScenario} 
+              onReset={handleReset} 
+            />
+          )}
+        </div>
       </main>
 
       {/* Loading Overlay */}
