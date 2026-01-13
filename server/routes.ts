@@ -132,5 +132,55 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/tts", async (req, res) => {
+    try {
+      const { text } = req.body;
+      if (!text) {
+        return res.status(400).json({ message: "Text is required" });
+      }
+
+      const ELEVEN_LABS_API_KEY = process.env.ELEVEN_LABS_API_KEY;
+      const ELEVEN_LABS_VOICE_ID = "pNInz6obpg7In99lS12f"; // Adam - professional male voice
+
+      if (!ELEVEN_LABS_API_KEY) {
+        return res.status(500).json({ message: "ElevenLabs API key not configured" });
+      }
+
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_LABS_VOICE_ID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVEN_LABS_API_KEY,
+          },
+          body: JSON.stringify({
+            text,
+            model_id: "eleven_monolingual_v1",
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`ElevenLabs API error: ${JSON.stringify(errorData)}`);
+      }
+
+      const audioBuffer = await response.arrayBuffer();
+      res.set({
+        "Content-Type": "audio/mpeg",
+        "Transfer-Encoding": "chunked",
+      });
+      res.send(Buffer.from(audioBuffer));
+    } catch (error) {
+      console.error("TTS error:", error);
+      res.status(500).json({ message: "Failed to generate speech" });
+    }
+  });
+
   return httpServer;
 }
