@@ -17,7 +17,40 @@ export default function Home() {
   
   const { mutate, isPending, data, reset } = useAnalyzeContract();
 
-  // ... (handleFileUpload remains the same)
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch(api.import.parse.path, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Failed to import');
+      
+      const result = await response.json();
+      setContractText(result.text);
+      toast({
+        title: "Success",
+        description: result.message,
+      });
+    } catch (error) {
+      toast({
+        title: "Import failed",
+        description: "Could not extract text from file.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsImporting(false);
+      // Reset input
+      e.target.value = '';
+    }
+  };
 
   const handleAnalyze = (scenario: string) => {
     if (!contractText.trim()) {
