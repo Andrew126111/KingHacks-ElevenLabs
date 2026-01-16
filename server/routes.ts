@@ -134,6 +134,47 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message, contractText, scenario, language = "english" } = req.body;
+      if (!message || !contractText) {
+        return res.status(400).json({ message: "Message and contract text are required" });
+      }
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `You are ClauseCast AI, a professional legal assistant. 
+            Answer follow-up questions about a specific contract scenario.
+            
+            Context:
+            - Contract: ${contractText.substring(0, 10000)}
+            - Scenario being discussed: ${scenario}
+            - Preferred language: ${language}
+
+            Guidelines:
+            - Use calm, plain, professional language.
+            - Answer in ${language}.
+            - Do not re-explain the main scenario unless explicitly asked.
+            - Focus strictly on the user's question relative to the contract.
+            - Be concise but thorough.
+            - This is for information only, not formal legal advice.`
+          },
+          { role: "user", content: message }
+        ],
+        temperature: 0.3,
+      });
+
+      const reply = response.choices[0].message.content;
+      res.json({ reply });
+    } catch (error) {
+      console.error("Chat error:", error);
+      res.status(500).json({ message: "Failed to get AI response" });
+    }
+  });
+
   app.post("/api/tts", async (req, res) => {
     try {
       const { text, language = 'english' } = req.body;

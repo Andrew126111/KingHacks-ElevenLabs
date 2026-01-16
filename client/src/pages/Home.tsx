@@ -4,6 +4,7 @@ import { ResultCard } from "@/components/ResultCard";
 import { useToast } from "@/hooks/use-toast";
 import { HighlightText } from "@/components/HighlightText";
 import { Hero } from "@/components/Hero";
+import { ChatAssistant } from "@/components/ChatAssistant";
 import { Scale, LogOut, CreditCard, UserX, ArrowRight, Loader2, FileText, Eye, Edit2, Upload } from "lucide-react";
 import { api } from "@shared/routes";
 
@@ -274,6 +275,14 @@ export default function Home() {
             </div>
           </div>
         </div>
+      )}
+
+      {data && activeScenario && (
+        <ChatAssistant 
+          contractText={contractText}
+          scenario={activeScenario}
+          language={language}
+        />
       )}
     </div>
   );
