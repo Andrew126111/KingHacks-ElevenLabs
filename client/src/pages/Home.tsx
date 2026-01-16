@@ -285,14 +285,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {data && activeScenario && (
-        <ChatAssistant 
-          contractText={contractText}
-          scenario={activeScenario}
-          language={language}
-        />
-      )}
     </div>
   );
 }
