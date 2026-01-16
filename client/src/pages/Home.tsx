@@ -259,7 +259,7 @@ export default function Home() {
             <div id="results-view" className="scroll-mt-24">
               <ResultCard 
                 key={`${activeScenario}-${data.originalClause}`}
-                data={data} 
+                data={{ ...data, language }} 
                 scenario={activeScenario} 
                 onReset={handleReset} 
               />

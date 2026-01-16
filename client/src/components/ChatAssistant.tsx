@@ -137,6 +137,7 @@ export function ChatAssistant({ contractText, scenario, language }: ChatAssistan
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               </ScrollArea>
 
