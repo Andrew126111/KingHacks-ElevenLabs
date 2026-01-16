@@ -69,7 +69,7 @@ export default function Home() {
     mutate({ 
       contractText, 
       scenario, 
-      language 
+      language: language as "english" | "french" | "spanish" 
     } as any);
     
     // Smooth scroll to results
