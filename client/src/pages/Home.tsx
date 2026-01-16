@@ -64,7 +64,11 @@ export default function Home() {
     
     setActiveScenario(scenario);
     setIsViewMode(true);
-    mutate({ contractText, scenario, language: language as any });
+    mutate({ 
+      contractText, 
+      scenario, 
+      language: language as "english" | "french" | "spanish" 
+    });
     
     // Smooth scroll to results
     setTimeout(() => {
