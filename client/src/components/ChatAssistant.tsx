@@ -102,8 +102,9 @@ export function ChatAssistant({ contractText, scenario, language }: ChatAssistan
               </div>
 
               {/* Chat Area */}
-              <ScrollArea className="flex-1 p-4 bg-slate-50/50" viewportRef={scrollRef}>
-                <div className="space-y-4">
+              <ScrollArea className="flex-1 p-4 bg-slate-50/50">
+                <div ref={scrollRef} className="h-full">
+                  <div className="space-y-4">
                   {chatHistory.length === 0 && (
                     <div className="flex justify-start">
                       <div className="bg-white text-slate-800 border border-slate-100 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm text-sm">
