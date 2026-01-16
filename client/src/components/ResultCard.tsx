@@ -73,8 +73,8 @@ export function ResultCard({ data, scenario, onReset }: ResultCardProps) {
             <div className="pt-6 border-t border-slate-100">
               <AudioPlayer 
                 textToSpeak={data.plainEnglish} 
-                language={data.language} // Assuming language is returned in data or we need to pass it
-                autoPlay={true} 
+                language={data.language} 
+                autoPlay={false} 
               />
             </div>
           </div>
