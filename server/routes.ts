@@ -121,7 +121,7 @@ export async function registerRoutes(
         riskHeadline: saved.riskHeadline || "",
         originalClause: saved.originalClause || "",
         plainEnglish: saved.plainEnglish || "",
-        language: saved.language as "english" | "french" | "spanish",
+        language: (saved.language || "english") as "english" | "french" | "spanish",
         highlightSnippets: saved.highlightSnippets || [],
         clarityLevel: (saved.clarityLevel as 'High' | 'Medium' | 'Low') || "Low",
         clarityReason: saved.clarityReason || "",
