@@ -80,7 +80,7 @@ export function ChatAssistant({ contractText, scenario, language }: ChatAssistan
                 </Button>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="h-64 overflow-y-auto p-4 space-y-4 bg-white/50">
+                <div className="h-64 overflow-y-auto p-4 space-y-4 bg-white">
                   {chatHistory.length === 0 && (
                     <p className="text-xs text-slate-400 text-center py-8">
                       Ask any follow-up questions about this scenario or specific clauses.
