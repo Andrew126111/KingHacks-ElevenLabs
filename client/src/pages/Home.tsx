@@ -89,17 +89,28 @@ export default function Home() {
       {/* Decorative background element */}
       <div className="fixed inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none opacity-50"></div>
 
-      <header className="relative pt-12 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-200/60 bg-white/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary text-white p-2.5 rounded-lg shadow-lg shadow-primary/20">
-            <Scale size={28} strokeWidth={1.5} />
+      <header className="relative pt-6 pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-200/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary text-white p-2 rounded-lg shadow-md">
+              <Scale size={24} strokeWidth={2} />
+            </div>
+            <div>
+              <h1 className="text-xl font-serif font-black tracking-tight text-primary uppercase">
+                ClauseCast
+              </h1>
+              <div className="h-0.5 w-8 bg-primary/20 rounded-full mt-0.5"></div>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-serif font-bold tracking-tight text-primary">
-              ClauseCast
-            </h1>
-            <p className="text-sm text-slate-500 font-medium">
-              Understand what happens if things go wrong — before you sign.
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-slate-400">
+              <a href="#" className="hover:text-primary transition-colors">How it works</a>
+              <a href="#" className="hover:text-primary transition-colors">Scenarios</a>
+              <a href="#" className="hover:text-primary transition-colors">Security</a>
+            </nav>
+            <div className="h-4 w-px bg-slate-200"></div>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">
+              Professional Contract Analysis
             </p>
           </div>
         </div>
